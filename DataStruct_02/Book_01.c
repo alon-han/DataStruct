@@ -1,16 +1,27 @@
 // 最大子序列和的四种算法分析
 #include <stdio.h>
 
-#define ARRAY_SIZE 20
+#define ARRAY_SIZE 6
 
 int MaxSubsequenceSum_Algorithm_1(const int array[], int n);
 int MaxSubsequenceSum_Algorithm_2(const int array[], int n);
 int MaxSubsequenceSum_Algorithm_3(const int array[], int n);
 static int MaxSubsequenceSum_Algorithm_3_part(const int array[], int left, int right);
 static int FindMAx(int number1, int number2, int number3);
+int MaxSubsequenceSum_Algorithm_4(const int array[], int n);
 
 int main(void)
 {
+    int array[ARRAY_SIZE] = {-2, 11, -4, 13, -5, -2};
+    int (* function_point[4])(const int *, int ) =
+            {MaxSubsequenceSum_Algorithm_1, MaxSubsequenceSum_Algorithm_2, MaxSubsequenceSum_Algorithm_3, MaxSubsequenceSum_Algorithm_4};
+
+    for (int i = 0; i < 4; ++i) {
+        int result;
+        result = function_point[i](array, ARRAY_SIZE);
+        printf("The algorithm %d result is %d\n", i + 1, result);
+    }
+
     return 0;
 }
 int MaxSubsequenceSum_Algorithm_1(const int array[], int n)
@@ -48,6 +59,10 @@ int MaxSubsequenceSum_Algorithm_2(const int array[], int n)
 
     return MaxSum;
 }
+int MaxSubsequenceSum_Algorithm_3(const int array[], int n)
+{
+    return MaxSubsequenceSum_Algorithm_3_part(array, 0, n - 1);
+}
 static int MaxSubsequenceSum_Algorithm_3_part(const int array[], int left, int right)
 {
     int MaxLeftSum, MaxRightSum;
@@ -56,13 +71,15 @@ static int MaxSubsequenceSum_Algorithm_3_part(const int array[], int left, int r
     int center;
 
     if (left == right)
+    {
         if (array[left] > 0)
             return array[left];
         else
             return 0;
+    }
     center = (left + right) / 2;
-    MaxLeftSum = MaxSubsequenceSum_Algorithm_3(array, left, center);
-    MaxRightSum = MaxSubsequenceSum_Algorithm_3(array, center + 1, right);
+    MaxLeftSum = MaxSubsequenceSum_Algorithm_3_part(array, left, center);
+    MaxRightSum = MaxSubsequenceSum_Algorithm_3_part(array, center + 1, right);
 
     MaxLeftBoardSum = 0;
     LeftBoardSum = 0;
@@ -80,4 +97,30 @@ static int MaxSubsequenceSum_Algorithm_3_part(const int array[], int left, int r
             MaxRightBoardSum = RightBoardSum;
     }
 
+    return FindMAx(MaxLeftSum, MaxRightSum, MaxLeftBoardSum + MaxRightBoardSum);
+}
+static int FindMAx(int number1, int number2, int number3)
+{
+    int result;
+//    比较三者中的最大值
+    result = (number1 >= number2) ? number1 : number2;
+    result = (result >= number3) ? result : number3;
+
+    return result;
+}
+int MaxSubsequenceSum_Algorithm_4(const int array[], int n)
+{
+    int LocalSum, MaxSum;
+
+    LocalSum = MaxSum = 0;
+
+    for (int i = 0; i < n; ++i) {
+        LocalSum += array[i];
+        if (LocalSum > MaxSum)
+            MaxSum = LocalSum;
+        else if (LocalSum < 0)
+            LocalSum = 0;
+    }
+
+    return MaxSum;
 }
