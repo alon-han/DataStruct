@@ -1,4 +1,4 @@
-### Algotithm 1
+### Algorithm 1
 
 | N    | Spend Time(seconds) |
 | ---- | ------------------- |
