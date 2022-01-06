@@ -18,7 +18,7 @@ int main(void){
 //        如果是字符则直接输出
         if (infix[i] >= 'a' && infix[i] <= 'z')
             printf("%c ", infix[i]);
-//        如果是左括号则入站
+//        如果是左括号则入栈
         else if (infix[i] == '(')
             Push(infix[i], S);
 //        如果是有括号则出栈至左括号
